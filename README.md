@@ -4,16 +4,25 @@ This repository contains the fuzzer-target for jampy, for different version of t
 This repository will be integrated in jampy source repository once the project will be public.
 
 ```
-usage: jampy-fuzzer-target-0.6.6_x86-64 [-h] [--env {tiny,full}] [--version]
+usage: jampy-fuzzer-target [-h] [--env {tiny,full}] [--socket-file SOCKET_FILE] [--version]
 
 Jampy fuzzer target
 
 options:
-  -h, --help         show this help message and exit
-  --env {tiny,full}  Specify environment mode: 'tiny' or 'full' (default: 'tiny')
-  --version          Print the jampy and jam version and exit
+  -h, --help            show this help message and exit
+  --env {tiny,full}     Specify environment mode: 'tiny' or 'full' (default: 'tiny')
+  --socket-file SOCKET_FILE
+                        Specify the socket file (default: '/tmp/jam_target.sock')
+  --version             Print the jampy and jam version and exit
 ```
 
+## Run on docker
+
+```
+cd docker
+docker build -t jam_fuzzer .
+docker run --rm -v /tmp/jam_target.sock:/tmp/jam_target.sock jam_fuzzer
+```
 
 ## About the author
 
