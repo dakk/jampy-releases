@@ -38,7 +38,7 @@ jobs:
         run: sleep 5
 
       - name: Run jampy-fuzzer
-        run: ./jampy-fuzzer/jampy-fuzzer-0.7.0_x86-64/jampy-fuzzer-0.7.0_x86-64
+        run: cd ./jampy-fuzzer/jampy-fuzzer-0.7.0_x86-64/ && ./jampy-fuzzer-0.7.0_x86-64
 
       - name: Stop jampy-target
         if: always()
