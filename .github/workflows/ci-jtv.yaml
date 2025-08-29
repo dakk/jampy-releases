@@ -1,0 +1,103 @@
+name: Jampy CI - Test Vectors
+
+on:
+  workflow_dispatch:  # run manually
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test-vectors:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install unzip git
+        run: sudo apt-get update && sudo apt-get install -y unzip git
+
+      - name: Extract jampy-target
+        run: unzip -q dist/jampy-target-0.7.0_x86-64.zip -d jampy-target
+
+      - name: Extract jampy-fuzzer
+        run: unzip -q dist/jampy-fuzzer-0.7.0_x86-64.zip -d jampy-fuzzer
+
+      - name: Make binaries executable
+        run: |
+          chmod +x jampy-target/jampy-target-0.7.0_x86-64/jampy-target
+          chmod +x jampy-fuzzer/jampy-fuzzer-0.7.0_x86-64/jampy-fuzzer
+
+      - name: Clone jam-test-vectors
+        run: git clone https://github.com/davxy/jam-test-vectors
+
+      - name: Run jampy-target in background
+        run: |
+          ./jampy-target/jampy-target-0.7.0_x86-64/jampy-target &
+          echo $! > target.pid
+        shell: bash
+
+      - name: Wait for target startup
+        run: sleep 5
+
+      - name: Run fuzzer on traces: fallback
+        run: |
+          for f in jam-test-vectors/traces/fallback/*.bin; do
+            if [[ "$f" != *genesis* ]]; then
+              echo "Running fuzzer on $f"
+              cd ./jampy-fuzzer/jampy-fuzzer-0.7.0_x86-64/ && ./jampy-fuzzer --single-trace "$f" && cd ../..
+            fi
+          done
+
+      - name: Run fuzzer on traces: safrole
+        run: |
+          for f in jam-test-vectors/traces/safrole/*.bin; do
+            if [[ "$f" != *genesis* ]]; then
+              echo "Running fuzzer on $f"
+              cd ./jampy-fuzzer/jampy-fuzzer-0.7.0_x86-64/ && ./jampy-fuzzer --single-trace "$f" && cd ../..
+            fi
+          done
+
+
+      - name: Run fuzzer on traces: preimages_light
+        run: |
+          for f in jam-test-vectors/traces/preimages_light/*.bin; do
+            if [[ "$f" != *genesis* ]]; then
+              echo "Running fuzzer on $f"
+              cd ./jampy-fuzzer/jampy-fuzzer-0.7.0_x86-64/ && ./jampy-fuzzer --single-trace "$f" && cd ../..
+            fi
+          done
+
+
+      - name: Run fuzzer on traces: storage_light
+        run: |
+          for f in jam-test-vectors/traces/storage_light/*.bin; do
+            if [[ "$f" != *genesis* ]]; then
+              echo "Running fuzzer on $f"
+              cd ./jampy-fuzzer/jampy-fuzzer-0.7.0_x86-64/ && ./jampy-fuzzer --single-trace "$f" && cd ../..
+            fi
+          done
+
+      # - name: Run fuzzer on traces: preimages_light
+      #   run: |
+      #     for f in jam-test-vectors/traces/preimages_light/*.bin; do
+      #       if [[ "$f" != *genesis* ]]; then
+      #         echo "Running fuzzer on $f"
+      #         cd ./jampy-fuzzer/jampy-fuzzer-0.7.0_x86-64/ && ./jampy-fuzzer --single-trace "$f" && cd ../..
+      #       fi
+      #     done
+
+
+      # - name: Run fuzzer on traces: storage_light
+      #   run: |
+      #     for f in jam-test-vectors/traces/storage_light/*.bin; do
+      #       if [[ "$f" != *genesis* ]]; then
+      #         echo "Running fuzzer on $f"
+      #         cd ./jampy-fuzzer/jampy-fuzzer-0.7.0_x86-64/ && ./jampy-fuzzer --single-trace "$f" && cd ../..
+      #       fi
+      #     done
+
+      - name: Stop jampy-target
+        if: always()
+        run: kill $(cat target.pid)
