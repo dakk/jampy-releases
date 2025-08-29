@@ -25,12 +25,12 @@ jobs:
 
       - name: Make binaries executable
         run: |
-          chmod +x jampy-target/jampy-target-0.7.0_x86-64/jampy-target
-          chmod +x jampy-fuzzer/jampy-fuzzer-0.7.0_x86-64/jampy-fuzzer
+          chmod +x jampy-target/jampy-target-0.7.0_x86-64/jampy-target-0.7.0_x86-64
+          chmod +x jampy-fuzzer/jampy-fuzzer-0.7.0_x86-64/jampy-fuzzer-0.7.0_x86-64
 
       - name: Run jampy-target in background
         run: |
-          ./jampy-target/jampy-target-0.7.0_x86-64/jampy-target &
+          ./jampy-target/jampy-target-0.7.0_x86-64/jampy-target-0.7.0_x86-64 &
           echo $! > target.pid
         shell: bash
 
@@ -38,7 +38,7 @@ jobs:
         run: sleep 5
 
       - name: Run jampy-fuzzer
-        run: ./jampy-fuzzer/jampy-fuzzer-0.7.0_x86-64/jampy-fuzzer
+        run: ./jampy-fuzzer/jampy-fuzzer-0.7.0_x86-64/jampy-fuzzer-0.7.0_x86-64
 
       - name: Stop jampy-target
         if: always()
