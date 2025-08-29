@@ -1,7 +1,6 @@
 name: Jampy CI - Test Vectors
 
 on:
-  workflow_dispatch:  # run manually
   push:
     branches: [ main ]
   pull_request:
