@@ -25,15 +25,15 @@ jobs:
 
       - name: Make binaries executable
         run: |
-          chmod +x jampy-target/jampy-target-0.7.0_x86-64/jampy-target
-          chmod +x jampy-fuzzer/jampy-fuzzer-0.7.0_x86-64/jampy-fuzzer
+          chmod +x jampy-target/jampy-target-0.7.0_x86-64/jampy-target-0.7.0_x86-64
+          chmod +x jampy-fuzzer/jampy-fuzzer-0.7.0_x86-64/jampy-fuzzer-0.7.0_x86-64
 
       - name: Clone jam-test-vectors
         run: git clone https://github.com/davxy/jam-test-vectors
 
       - name: Run jampy-target in background
         run: |
-          ./jampy-target/jampy-target-0.7.0_x86-64/jampy-target &
+          ./jampy-target/jampy-target-0.7.0_x86-64/jampy-target-0.7.0_x86-64 &
           echo $! > target.pid
         shell: bash
 
@@ -45,7 +45,7 @@ jobs:
           for f in jam-test-vectors/traces/fallback/*.bin; do
             if [[ "$f" != *genesis* ]]; then
               echo "Running fuzzer on $f"
-              cd ./jampy-fuzzer/jampy-fuzzer-0.7.0_x86-64/ && ./jampy-fuzzer --single-trace "$f" && cd ../..
+              cd ./jampy-fuzzer/jampy-fuzzer-0.7.0_x86-64/ && ./jampy-fuzzer-0.7.0_x86-64 --single-trace "$f" && cd ../..
             fi
           done
 
@@ -54,7 +54,7 @@ jobs:
           for f in jam-test-vectors/traces/safrole/*.bin; do
             if [[ "$f" != *genesis* ]]; then
               echo "Running fuzzer on $f"
-              cd ./jampy-fuzzer/jampy-fuzzer-0.7.0_x86-64/ && ./jampy-fuzzer --single-trace "$f" && cd ../..
+              cd ./jampy-fuzzer/jampy-fuzzer-0.7.0_x86-64/ && ./jampy-fuzzer-0.7.0_x86-64 --single-trace "$f" && cd ../..
             fi
           done
 
@@ -64,7 +64,7 @@ jobs:
           for f in jam-test-vectors/traces/preimages_light/*.bin; do
             if [[ "$f" != *genesis* ]]; then
               echo "Running fuzzer on $f"
-              cd ./jampy-fuzzer/jampy-fuzzer-0.7.0_x86-64/ && ./jampy-fuzzer --single-trace "$f" && cd ../..
+              cd ./jampy-fuzzer/jampy-fuzzer-0.7.0_x86-64/ && ./jampy-fuzzer-0.7.0_x86-64 --single-trace "$f" && cd ../..
             fi
           done
 
@@ -74,7 +74,7 @@ jobs:
           for f in jam-test-vectors/traces/storage_light/*.bin; do
             if [[ "$f" != *genesis* ]]; then
               echo "Running fuzzer on $f"
-              cd ./jampy-fuzzer/jampy-fuzzer-0.7.0_x86-64/ && ./jampy-fuzzer --single-trace "$f" && cd ../..
+              cd ./jampy-fuzzer/jampy-fuzzer-0.7.0_x86-64/ && ./jampy-fuzzer-0.7.0_x86-64 --single-trace "$f" && cd ../..
             fi
           done
 
@@ -83,7 +83,7 @@ jobs:
       #     for f in jam-test-vectors/traces/preimages_light/*.bin; do
       #       if [[ "$f" != *genesis* ]]; then
       #         echo "Running fuzzer on $f"
-      #         cd ./jampy-fuzzer/jampy-fuzzer-0.7.0_x86-64/ && ./jampy-fuzzer --single-trace "$f" && cd ../..
+      #         cd ./jampy-fuzzer/jampy-fuzzer-0.7.0_x86-64/ && ./jampy-fuzzer-0.7.0_x86-64 --single-trace "$f" && cd ../..
       #       fi
       #     done
 
@@ -93,7 +93,7 @@ jobs:
       #     for f in jam-test-vectors/traces/storage_light/*.bin; do
       #       if [[ "$f" != *genesis* ]]; then
       #         echo "Running fuzzer on $f"
-      #         cd ./jampy-fuzzer/jampy-fuzzer-0.7.0_x86-64/ && ./jampy-fuzzer --single-trace "$f" && cd ../..
+      #         cd ./jampy-fuzzer/jampy-fuzzer-0.7.0_x86-64/ && ./jampy-fuzzer-0.7.0_x86-64 --single-trace "$f" && cd ../..
       #       fi
       #     done
 
