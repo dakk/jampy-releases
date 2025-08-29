@@ -3,10 +3,13 @@
 This repository contains the fuzzer-target for jampy, for different version of the gray paper.
 This repository will be integrated in jampy source repository once the project will be public.
 
-```
-usage: jampy-fuzzer-target [-h] [--env {tiny,full}] [--socket-file SOCKET_FILE] [--version]
 
-Jampy fuzzer target
+## Target
+
+```
+usage: jampy-target-0.7.0_x86-64 [-h] [--env {tiny,full}] [--socket-file SOCKET_FILE] [--version]
+
+Jampy target
 
 options:
   -h, --help            show this help message and exit
@@ -16,13 +19,28 @@ options:
   --version             Print the jampy and jam version and exit
 ```
 
-## Run on docker
+## Fuzzer
 
 ```
-cd docker
-docker build -t jam_fuzzer .
-docker run --rm -v /tmp/jam_target.sock:/tmp/jam_target.sock jam_fuzzer
+usage: jampy-fuzzer-0.7.0_x86-64 [-h] [--env {tiny,full}] [--socket-file SOCKET_FILE] [--version] [--seed SEED] [--blocks BLOCKS] [--mod {fallback,safrole}]
+                                 [--single-trace SINGLE_TRACE]
+
+Jampy fuzzer
+
+options:
+  -h, --help            show this help message and exit
+  --env {tiny,full}     Specify environment mode: 'tiny' or 'full' (default: 'tiny')
+  --socket-file SOCKET_FILE
+                        Specify the socket file (default: '/tmp/jam_target.sock')
+  --version             Print the jampy and jam version and exit
+  --seed SEED           Random seed (default: current timestamp)
+  --blocks BLOCKS       Number of blocks (default: 10)
+  --mod {fallback,safrole}
+                        Fuzzer modality between 'fallback' and 'safrole' (default: fallback)
+  --single-trace SINGLE_TRACE
+                        Send a single trace file to the target in json or binary format (default: none)
 ```
+
 
 ## About the author
 
