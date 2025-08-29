@@ -45,7 +45,7 @@ jobs:
           for f in jam-test-vectors/traces/fallback/*.bin; do
             if [[ "$f" != *genesis* ]]; then
               echo "Running fuzzer on $f"
-              cd ./jampy-fuzzer/jampy-fuzzer-0.7.0_x86-64/ && ./jampy-fuzzer-0.7.0_x86-64 --single-trace "$f" && cd ../..
+              cd ./jampy-fuzzer/jampy-fuzzer-0.7.0_x86-64/ && ./jampy-fuzzer-0.7.0_x86-64 --single-trace "../../$f" && cd ../..
             fi
           done
 
@@ -54,7 +54,7 @@ jobs:
           for f in jam-test-vectors/traces/safrole/*.bin; do
             if [[ "$f" != *genesis* ]]; then
               echo "Running fuzzer on $f"
-              cd ./jampy-fuzzer/jampy-fuzzer-0.7.0_x86-64/ && ./jampy-fuzzer-0.7.0_x86-64 --single-trace "$f" && cd ../..
+              cd ./jampy-fuzzer/jampy-fuzzer-0.7.0_x86-64/ && ./jampy-fuzzer-0.7.0_x86-64 --single-trace "../../$f" && cd ../..
             fi
           done
 
@@ -64,7 +64,7 @@ jobs:
           for f in jam-test-vectors/traces/preimages_light/*.bin; do
             if [[ "$f" != *genesis* ]]; then
               echo "Running fuzzer on $f"
-              cd ./jampy-fuzzer/jampy-fuzzer-0.7.0_x86-64/ && ./jampy-fuzzer-0.7.0_x86-64 --single-trace "$f" && cd ../..
+              cd ./jampy-fuzzer/jampy-fuzzer-0.7.0_x86-64/ && ./jampy-fuzzer-0.7.0_x86-64 --single-trace "../../$f" && cd ../..
             fi
           done
 
@@ -74,7 +74,7 @@ jobs:
           for f in jam-test-vectors/traces/storage_light/*.bin; do
             if [[ "$f" != *genesis* ]]; then
               echo "Running fuzzer on $f"
-              cd ./jampy-fuzzer/jampy-fuzzer-0.7.0_x86-64/ && ./jampy-fuzzer-0.7.0_x86-64 --single-trace "$f" && cd ../..
+              cd ./jampy-fuzzer/jampy-fuzzer-0.7.0_x86-64/ && ./jampy-fuzzer-0.7.0_x86-64 --single-trace "../../$f" && cd ../..
             fi
           done
 
