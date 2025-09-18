@@ -32,7 +32,7 @@ jobs:
         run: |
           git clone https://github.com/davxy/jam-types
           cd jam-types
-          pip install .
+          bash install.sh
 
       - name: Clone jam-conformance
         run: git clone https://github.com/davxy/jam-conformance
