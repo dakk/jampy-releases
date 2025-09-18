@@ -30,9 +30,7 @@ jobs:
 
       - name: Install jam-types
         run: |
-          git clone https://github.com/davxy/jam-types
-          cd jam-types
-          bash install.sh
+          pip install git+https://github.com/davxy/jam-types@0.7.0
 
       - name: Clone jam-conformance
         run: git clone https://github.com/davxy/jam-conformance
