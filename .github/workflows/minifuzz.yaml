@@ -28,9 +28,9 @@ jobs:
           chmod +x jampy-target/jampy-target-0.7.0_x86-64/jampy-target-0.7.0_x86-64
           chmod +x jampy-fuzzer/jampy-fuzzer-0.7.0_x86-64/jampy-fuzzer-0.7.0_x86-64
 
-      - name: Install jam-types
+      - name: Install jam-types-py
         run: |
-          pip install git+https://github.com/davxy/jam-types@0.7.0
+          pip install git+https://github.com/davxy/jam-types-py@0.7.0
 
       - name: Clone jam-conformance
         run: git clone https://github.com/davxy/jam-conformance
