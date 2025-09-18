@@ -30,6 +30,7 @@ jobs:
 
       - name: Install jam-types-py
         run: |
+          export GITHUB_REF=refs/tags/v0.7.0
           pip install https://github.com/davxy/jam-types-py/archive/refs/tags/v0.7.0.tar.gz
 
       - name: Clone jam-conformance
