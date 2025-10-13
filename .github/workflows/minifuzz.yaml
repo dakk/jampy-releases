@@ -41,7 +41,9 @@ jobs:
           chmod +x jampy-fuzzer/jampy-fuzzer-${{ env.JAM_VERSION }}_${{ env.BIN_ARCH }}/jampy-fuzzer-${{ env.JAM_VERSION }}_${{ env.BIN_ARCH }}
 
       - name: Install jam-types-py
-        run: pip install https://github.com/davxy/jam-types-py/archive/refs/tags/v${{ env.JAM_VERSION }}.tar.gz
+        run: |
+          export GITHUB_REF=refs/tags/v${{ env.JAM_VERSION }}
+          pip install https://github.com/davxy/jam-types-py/archive/refs/tags/v${{ env.JAM_VERSION }}.tar.gz
 
       - name: Clone jam-conformance
         run: git clone https://github.com/davxy/jam-conformance
