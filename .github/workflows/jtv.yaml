@@ -10,6 +10,14 @@ jobs:
   test-vectors:
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        jam_version: [ '0.7.0', '0.7.1' ]
+
+    env:
+      BIN_ARCH: x86-64
+      JAM_VERSION: ${{ matrix.jam_version }}
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -18,22 +26,22 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y unzip git
 
       - name: Extract jampy-target
-        run: unzip -q dist/jampy-target-0.7.0_x86-64.zip -d jampy-target
+        run: unzip -q dist/jampy-target-${{ env.JAM_VERSION }}_${{ env.BIN_ARCH }}.zip -d jampy-target
 
       - name: Extract jampy-fuzzer
-        run: unzip -q dist/jampy-fuzzer-0.7.0_x86-64.zip -d jampy-fuzzer
+        run: unzip -q dist/jampy-fuzzer-${{ env.JAM_VERSION }}_${{ env.BIN_ARCH }}.zip -d jampy-fuzzer
 
       - name: Make binaries executable
         run: |
-          chmod +x jampy-target/jampy-target-0.7.0_x86-64/jampy-target-0.7.0_x86-64
-          chmod +x jampy-fuzzer/jampy-fuzzer-0.7.0_x86-64/jampy-fuzzer-0.7.0_x86-64
+          chmod +x jampy-target/jampy-target-${{ env.JAM_VERSION }}_${{ env.BIN_ARCH }}/jampy-target-${{ env.JAM_VERSION }}_${{ env.BIN_ARCH }}
+          chmod +x jampy-fuzzer/jampy-fuzzer-${{ env.JAM_VERSION }}_${{ env.BIN_ARCH }}/jampy-fuzzer-${{ env.JAM_VERSION }}_${{ env.BIN_ARCH }}
 
       - name: Clone jam-test-vectors
         run: git clone https://github.com/davxy/jam-test-vectors
 
       - name: Run jampy-target in background
         run: |
-          ./jampy-target/jampy-target-0.7.0_x86-64/jampy-target-0.7.0_x86-64 &
+          ./jampy-target/jampy-target-${{ env.JAM_VERSION }}_${{ env.BIN_ARCH }}/jampy-target-${{ env.JAM_VERSION }}_${{ env.BIN_ARCH }} &
           echo $! > target.pid
         shell: bash
 
@@ -45,7 +53,7 @@ jobs:
           for f in jam-test-vectors/traces/fallback/*.bin; do
             if [[ "$f" != *genesis* ]]; then
               echo "Running fuzzer on $f"
-              cd ./jampy-fuzzer/jampy-fuzzer-0.7.0_x86-64/ && ./jampy-fuzzer-0.7.0_x86-64 --single-trace "../../$f" && cd ../..
+              cd ./jampy-fuzzer/jampy-fuzzer-${{ env.JAM_VERSION }}_${{ env.BIN_ARCH }}/ && ./jampy-fuzzer-${{ env.JAM_VERSION }}_${{ env.BIN_ARCH }} --single-trace "../../$f" && cd ../..
             fi
           done
 
@@ -54,7 +62,7 @@ jobs:
           for f in jam-test-vectors/traces/safrole/*.bin; do
             if [[ "$f" != *genesis* ]]; then
               echo "Running fuzzer on $f"
-              cd ./jampy-fuzzer/jampy-fuzzer-0.7.0_x86-64/ && ./jampy-fuzzer-0.7.0_x86-64 --single-trace "../../$f" && cd ../..
+              cd ./jampy-fuzzer/jampy-fuzzer-${{ env.JAM_VERSION }}_${{ env.BIN_ARCH }}/ && ./jampy-fuzzer-${{ env.JAM_VERSION }}_${{ env.BIN_ARCH }} --single-trace "../../$f" && cd ../..
             fi
           done
 
@@ -64,7 +72,7 @@ jobs:
           for f in jam-test-vectors/traces/preimages_light/*.bin; do
             if [[ "$f" != *genesis* ]]; then
               echo "Running fuzzer on $f"
-              cd ./jampy-fuzzer/jampy-fuzzer-0.7.0_x86-64/ && ./jampy-fuzzer-0.7.0_x86-64 --single-trace "../../$f" && cd ../..
+              cd ./jampy-fuzzer/jampy-fuzzer-${{ env.JAM_VERSION }}_${{ env.BIN_ARCH }}/ && ./jampy-fuzzer-${{ env.JAM_VERSION }}_${{ env.BIN_ARCH }} --single-trace "../../$f" && cd ../..
             fi
           done
 
@@ -74,7 +82,7 @@ jobs:
           for f in jam-test-vectors/traces/storage_light/*.bin; do
             if [[ "$f" != *genesis* ]]; then
               echo "Running fuzzer on $f"
-              cd ./jampy-fuzzer/jampy-fuzzer-0.7.0_x86-64/ && ./jampy-fuzzer-0.7.0_x86-64 --single-trace "../../$f" && cd ../..
+              cd ./jampy-fuzzer/jampy-fuzzer-${{ env.JAM_VERSION }}_${{ env.BIN_ARCH }}/ && ./jampy-fuzzer-${{ env.JAM_VERSION }}_${{ env.BIN_ARCH }} --single-trace "../../$f" && cd ../..
             fi
           done
 
@@ -83,7 +91,7 @@ jobs:
           for f in jam-test-vectors/traces/preimages/*.bin; do
             if [[ "$f" != *genesis* ]]; then
               echo "Running fuzzer on $f"
-              cd ./jampy-fuzzer/jampy-fuzzer-0.7.0_x86-64/ && ./jampy-fuzzer-0.7.0_x86-64 --single-trace "../../$f" && cd ../..
+              cd ./jampy-fuzzer/jampy-fuzzer-${{ env.JAM_VERSION }}_${{ env.BIN_ARCH }}/ && ./jampy-fuzzer-${{ env.JAM_VERSION }}_${{ env.BIN_ARCH }} --single-trace "../../$f" && cd ../..
             fi
           done
 
@@ -93,7 +101,7 @@ jobs:
           for f in jam-test-vectors/traces/storage/*.bin; do
             if [[ "$f" != *genesis* ]]; then
               echo "Running fuzzer on $f"
-              cd ./jampy-fuzzer/jampy-fuzzer-0.7.0_x86-64/ && ./jampy-fuzzer-0.7.0_x86-64 --single-trace "../../$f" && cd ../..
+              cd ./jampy-fuzzer/jampy-fuzzer-${{ env.JAM_VERSION }}_${{ env.BIN_ARCH }}/ && ./jampy-fuzzer-${{ env.JAM_VERSION }}_${{ env.BIN_ARCH }} --single-trace "../../$f" && cd ../..
             fi
           done
 

@@ -6,9 +6,21 @@ on:
   pull_request:
     branches: [ main ]
 
+env:
+  JAM_VERSION: 0.7.0
+  BIN_ARCH: x86-64
+
 jobs:
   test-vectors:
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        jam_version: [ '0.7.0', '0.7.1' ]
+
+    env:
+      BIN_ARCH: x86-64
+      JAM_VERSION: ${{ matrix.jam_version }}
 
     steps:
       - name: Checkout repository
@@ -18,27 +30,25 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y unzip git
 
       - name: Extract jampy-target
-        run: unzip -q dist/jampy-target-0.7.0_x86-64.zip -d jampy-target
+        run: unzip -q dist/jampy-target-${{ env.JAM_VERSION }}_${{ env.BIN_ARCH }}.zip -d jampy-target
 
       - name: Extract jampy-fuzzer
-        run: unzip -q dist/jampy-fuzzer-0.7.0_x86-64.zip -d jampy-fuzzer
+        run: unzip -q dist/jampy-fuzzer-${{ env.JAM_VERSION }}_${{ env.BIN_ARCH }}.zip -d jampy-fuzzer
 
       - name: Make binaries executable
         run: |
-          chmod +x jampy-target/jampy-target-0.7.0_x86-64/jampy-target-0.7.0_x86-64
-          chmod +x jampy-fuzzer/jampy-fuzzer-0.7.0_x86-64/jampy-fuzzer-0.7.0_x86-64
+          chmod +x jampy-target/jampy-target-${{ env.JAM_VERSION }}_${{ env.BIN_ARCH }}/jampy-target-${{ env.JAM_VERSION }}_${{ env.BIN_ARCH }}
+          chmod +x jampy-fuzzer/jampy-fuzzer-${{ env.JAM_VERSION }}_${{ env.BIN_ARCH }}/jampy-fuzzer-${{ env.JAM_VERSION }}_${{ env.BIN_ARCH }}
 
       - name: Install jam-types-py
-        run: |
-          export GITHUB_REF=refs/tags/v0.7.0
-          pip install https://github.com/davxy/jam-types-py/archive/refs/tags/v0.7.0.tar.gz
+        run: pip install https://github.com/davxy/jam-types-py/archive/refs/tags/v${{ env.JAM_VERSION }}.tar.gz
 
       - name: Clone jam-conformance
         run: git clone https://github.com/davxy/jam-conformance
 
       - name: Run jampy-target in background
         run: |
-          ./jampy-target/jampy-target-0.7.0_x86-64/jampy-target-0.7.0_x86-64 &
+          ./jampy-target/jampy-target-${{ env.JAM_VERSION }}_${{ env.BIN_ARCH }}/jampy-target-${{ env.JAM_VERSION }}_${{ env.BIN_ARCH }} &
           echo $! > target.pid
         shell: bash
 
