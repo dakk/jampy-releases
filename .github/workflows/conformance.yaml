@@ -12,7 +12,7 @@ jobs:
 
     strategy:
       matrix:
-        jam_version: [ '0.7.0', '0.7.1' ]
+        jam_version: [ '0.7.0', '0.7.1', '0.7.2' ]
 
     env:
       BIN_ARCH: x86-64
@@ -59,7 +59,7 @@ jobs:
                 echo "Fuzzer returned non-zero on $f"
               }
             fi
-          done < <(find jam-conformance/fuzz-reports/0.7.0/traces/ -type f -name '*.bin' -print0)
+          done < <(find jam-conformance/fuzz-reports/${{ env.JAM_VERSION }}/traces/ -type f -name '*.bin' -print0)
 
       - name: Stop jampy-target
         if: always()

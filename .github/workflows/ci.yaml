@@ -12,7 +12,7 @@ jobs:
 
     strategy:
       matrix:
-        jam_version: [ '0.7.0', '0.7.1' ]
+        jam_version: [ '0.7.0', '0.7.1', '0.7.2' ]
 
     env:
       BIN_ARCH: x86-64
