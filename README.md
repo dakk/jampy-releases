@@ -1,5 +1,7 @@
 # jampy-releases
 
+![CI Status](https://github.com/dakk/jampy-releases/actions/workflows/ci.yaml/badge.svg)
+
 This repository contains the fuzzer-target for jampy, for different version of the gray paper.
 This repository will be integrated in jampy source repository once the project will be public.
 
