@@ -7,7 +7,7 @@ on:
     branches: [ main ]
 
 env:
-  JAM_VERSION: 0.7.0
+  JAM_VERSION: 0.7.2
   BIN_ARCH: x86-64
 
 jobs:
@@ -63,7 +63,11 @@ jobs:
 
       - name: Run fuzzer on minifuzz examples - forks
         run: |
-          python jam-conformance/fuzz-proto/minifuzz/minifuzz.py -d jam-conformance/fuzz-proto/examples/v1/no_forks
+          python jam-conformance/fuzz-proto/minifuzz/minifuzz.py -d jam-conformance/fuzz-proto/examples/v1/forks
+
+      - name: Run fuzzer on minifuzz examples - faulty
+        run: |
+          python jam-conformance/fuzz-proto/minifuzz/minifuzz.py -d jam-conformance/fuzz-proto/examples/v1/faulty
 
       - name: Stop jampy-target
         if: always()

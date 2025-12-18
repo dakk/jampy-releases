@@ -12,7 +12,7 @@ jobs:
 
     strategy:
       matrix:
-        jam_version: [ '0.7.0', '0.7.1', '0.7.2' ]
+        jam_version: [ '0.7.2' ]
 
     env:
       BIN_ARCH: x86-64
@@ -86,6 +86,17 @@ jobs:
             fi
           done
 
+
+      - name: Run fuzzer on traces - fuzzy_light
+        run: |
+          for f in jam-test-vectors/traces/fuzzy_light/*.bin; do
+            if [[ "$f" != *genesis* ]]; then
+              echo "Running fuzzer on $f"
+              cd ./jampy-fuzzer/jampy-fuzzer-${{ env.JAM_VERSION }}_${{ env.BIN_ARCH }}/ && ./jampy-fuzzer-${{ env.JAM_VERSION }}_${{ env.BIN_ARCH }} --single-trace "../../$f" && cd ../..
+            fi
+          done
+
+
       - name: Run fuzzer on traces - preimages
         run: |
           for f in jam-test-vectors/traces/preimages/*.bin; do
@@ -99,6 +110,16 @@ jobs:
       - name: Run fuzzer on traces - storage
         run: |
           for f in jam-test-vectors/traces/storage/*.bin; do
+            if [[ "$f" != *genesis* ]]; then
+              echo "Running fuzzer on $f"
+              cd ./jampy-fuzzer/jampy-fuzzer-${{ env.JAM_VERSION }}_${{ env.BIN_ARCH }}/ && ./jampy-fuzzer-${{ env.JAM_VERSION }}_${{ env.BIN_ARCH }} --single-trace "../../$f" && cd ../..
+            fi
+          done
+
+
+      - name: Run fuzzer on traces - fuzzy
+        run: |
+          for f in jam-test-vectors/traces/fuzzy/*.bin; do
             if [[ "$f" != *genesis* ]]; then
               echo "Running fuzzer on $f"
               cd ./jampy-fuzzer/jampy-fuzzer-${{ env.JAM_VERSION }}_${{ env.BIN_ARCH }}/ && ./jampy-fuzzer-${{ env.JAM_VERSION }}_${{ env.BIN_ARCH }} --single-trace "../../$f" && cd ../..

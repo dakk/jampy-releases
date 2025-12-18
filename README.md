@@ -7,7 +7,7 @@ This repository will be integrated in jampy source repository once the project w
 ## Target
 
 ```
-usage: jampy-target-0.7.0_x86-64 [-h] [--env {tiny,full}] [--socket-file SOCKET_FILE] [--version]
+usage: jampy-target-0.7.2_x86-64 [-h] [--env {tiny,full}] [--socket-file SOCKET_FILE] [--version]
 
 Jampy target
 
@@ -22,7 +22,7 @@ options:
 ## Fuzzer
 
 ```
-usage: jampy-fuzzer-0.7.0_x86-64 [-h] [--env {tiny,full}] [--socket-file SOCKET_FILE] [--version] [--seed SEED] [--blocks BLOCKS] [--mod {fallback,safrole}]
+usage: jampy-fuzzer-0.7.2_x86-64 [-h] [--env {tiny,full}] [--socket-file SOCKET_FILE] [--version] [--seed SEED] [--blocks BLOCKS] [--mod {fallback,safrole}]
                                  [--single-trace SINGLE_TRACE]
 
 Jampy fuzzer
