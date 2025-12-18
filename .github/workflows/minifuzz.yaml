@@ -1,4 +1,4 @@
-name: Jampy CI - Mini Fuzzer Vectors
+name: MiniFuzz
 
 on:
   push:

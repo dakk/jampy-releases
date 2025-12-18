@@ -1,4 +1,4 @@
-name: Jampy CI - Test Vectors
+name: Jam Test Vectors
 
 on:
   push:
