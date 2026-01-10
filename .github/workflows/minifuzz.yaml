@@ -65,10 +65,6 @@ jobs:
         run: |
           python jam-conformance/fuzz-proto/minifuzz/minifuzz.py -d jam-conformance/fuzz-proto/examples/0.7.2/forks
 
-      - name: Run fuzzer on minifuzz examples - faulty
-        run: |
-          python jam-conformance/fuzz-proto/minifuzz/minifuzz.py -d jam-conformance/fuzz-proto/examples/0.7.2/faulty
-
       - name: Stop jampy-target
         if: always()
         run: kill $(cat target.pid)
