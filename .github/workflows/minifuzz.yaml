@@ -59,15 +59,15 @@ jobs:
 
       - name: Run fuzzer on minifuzz examples - no_forks
         run: |
-          python jam-conformance/fuzz-proto/minifuzz/minifuzz.py -d jam-conformance/fuzz-proto/examples/v1/no_forks
+          python jam-conformance/fuzz-proto/minifuzz/minifuzz.py -d jam-conformance/fuzz-proto/examples/0.7.2/no_forks
 
       - name: Run fuzzer on minifuzz examples - forks
         run: |
-          python jam-conformance/fuzz-proto/minifuzz/minifuzz.py -d jam-conformance/fuzz-proto/examples/v1/forks
+          python jam-conformance/fuzz-proto/minifuzz/minifuzz.py -d jam-conformance/fuzz-proto/examples/0.7.2/forks
 
       - name: Run fuzzer on minifuzz examples - faulty
         run: |
-          python jam-conformance/fuzz-proto/minifuzz/minifuzz.py -d jam-conformance/fuzz-proto/examples/v1/faulty
+          python jam-conformance/fuzz-proto/minifuzz/minifuzz.py -d jam-conformance/fuzz-proto/examples/0.7.2/faulty
 
       - name: Stop jampy-target
         if: always()
