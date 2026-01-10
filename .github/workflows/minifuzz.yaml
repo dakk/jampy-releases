@@ -16,7 +16,7 @@ jobs:
 
     strategy:
       matrix:
-        jam_version: [ '0.7.0', '0.7.1', '0.7.2' ]
+        jam_version: [ '0.7.2' ]
 
     env:
       BIN_ARCH: x86-64
@@ -59,11 +59,11 @@ jobs:
 
       - name: Run fuzzer on minifuzz examples - no_forks
         run: |
-          python jam-conformance/fuzz-proto/minifuzz/minifuzz.py -d jam-conformance/fuzz-proto/examples/0.7.2/no_forks
+          python jam-conformance/fuzz-proto/minifuzz/minifuzz.py -d jam-conformance/fuzz-proto/examples/${{ env.JAM_VERSION }}/no_forks
 
       - name: Run fuzzer on minifuzz examples - forks
         run: |
-          python jam-conformance/fuzz-proto/minifuzz/minifuzz.py -d jam-conformance/fuzz-proto/examples/0.7.2/forks
+          python jam-conformance/fuzz-proto/minifuzz/minifuzz.py -d jam-conformance/fuzz-proto/examples/${{ env.JAM_VERSION }}/forks
 
       - name: Stop jampy-target
         if: always()
