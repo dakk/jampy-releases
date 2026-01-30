@@ -1,4 +1,4 @@
-name: MiniFuzz
+name: Conformance Vectors M1 branches
 
 on:
   push:
@@ -12,7 +12,7 @@ jobs:
 
     strategy:
       matrix:
-        jam_version: [ '0.7.2' ]
+        jam_version: [ '0.7.0', '0.7.1', '0.7.2' ]
 
     env:
       BIN_ARCH: x86-64
@@ -30,13 +30,10 @@ jobs:
       - name: Install git
         run: sudo apt-get install -y git
 
-      - name: Install jam-types-py
-        run: |
-          export GITHUB_REF=refs/tags/v${{ env.JAM_VERSION }}
-          pip install https://github.com/davxy/jam-types-py/archive/refs/tags/v${{ env.JAM_VERSION }}.tar.gz --break-system-packages
-
       - name: Clone jam-conformance
-        run: git clone https://github.com/davxy/jam-conformance
+        run: |
+          git clone https://github.com/w3f/jam-conformance
+          cd jam-conformance && git checkout jampy_m1
 
       - name: Start jampy-target
         run: |
@@ -52,13 +49,19 @@ jobs:
           cat ${{ github.workspace }}/target.log
           exit 1
 
-      - name: Run fuzzer on minifuzz examples - no_forks
+      - name: Run fuzzer on conformance traces
         run: |
-          python jam-conformance/fuzz-proto/minifuzz/minifuzz.py -d jam-conformance/fuzz-proto/examples/${{ env.JAM_VERSION }}/no_forks --target-sock  ${{ github.workspace }}/jam_target.sock
-
-      - name: Run fuzzer on minifuzz examples - forks
-        run: |
-          python jam-conformance/fuzz-proto/minifuzz/minifuzz.py -d jam-conformance/fuzz-proto/examples/${{ env.JAM_VERSION }}/forks --target-sock  ${{ github.workspace }}/jam_target.sock
+          set -euo pipefail
+          cd ./jampy-fuzzer/jampy-fuzzer-${{ env.JAM_VERSION }}_${{ env.BIN_ARCH }}/
+          while IFS= read -r -d '' f; do
+            filename=$(basename "$f")
+            if [[ "$filename" != *genesis* ]]; then
+              echo "Running fuzzer on $f"
+              ./jampy-fuzzer-${{ env.JAM_VERSION }}_${{ env.BIN_ARCH }} --socket-file ${{ github.workspace }}/jam_target.sock --single-trace "$f" || {
+                echo "Fuzzer returned non-zero on $f"
+              }
+            fi
+          done < <(find ${{ github.workspace }}/jam-conformance/fuzz-reports/${{ env.JAM_VERSION }}/traces/ -type f -name '*.bin' -print0)
 
       - name: Stop jampy-target
         if: always()
