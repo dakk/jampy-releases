@@ -6,10 +6,6 @@ on:
   pull_request:
     branches: [ main ]
 
-env:
-  JAM_VERSION: 0.7.2
-  BIN_ARCH: x86-64
-
 jobs:
   test-vectors:
     runs-on: ubuntu-latest
@@ -26,19 +22,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Install unzip git
-        run: sudo apt-get update && sudo apt-get install -y unzip git
+      - name: Setup Jampy
+        uses: ./.github/actions/setup-jampy
+        with:
+          jam_version: ${{ env.JAM_VERSION }}
 
-      - name: Extract jampy-target
-        run: unzip -q dist/jampy-target-${{ env.JAM_VERSION }}_${{ env.BIN_ARCH }}.zip -d jampy-target
-
-      - name: Extract jampy-fuzzer
-        run: unzip -q dist/jampy-fuzzer-${{ env.JAM_VERSION }}_${{ env.BIN_ARCH }}.zip -d jampy-fuzzer
-
-      - name: Make binaries executable
-        run: |
-          chmod +x jampy-target/jampy-target-${{ env.JAM_VERSION }}_${{ env.BIN_ARCH }}/jampy-target-${{ env.JAM_VERSION }}_${{ env.BIN_ARCH }}
-          chmod +x jampy-fuzzer/jampy-fuzzer-${{ env.JAM_VERSION }}_${{ env.BIN_ARCH }}/jampy-fuzzer-${{ env.JAM_VERSION }}_${{ env.BIN_ARCH }}
+      - name: Install git
+        run: sudo apt-get install -y git
 
       - name: Install jam-types-py
         run: |
@@ -48,23 +38,16 @@ jobs:
       - name: Clone jam-conformance
         run: git clone https://github.com/davxy/jam-conformance
 
-      - name: Run jampy-target in background
-        run: |
-          ./jampy-target/jampy-target-${{ env.JAM_VERSION }}_${{ env.BIN_ARCH }}/jampy-target-${{ env.JAM_VERSION }}_${{ env.BIN_ARCH }} &
-          echo $! > target.pid
-        shell: bash
-
-      - name: Wait for target startup
-        run: sleep 5
-
       - name: Run fuzzer on minifuzz examples - no_forks
         run: |
-          python jam-conformance/fuzz-proto/minifuzz/minifuzz.py -d jam-conformance/fuzz-proto/examples/${{ env.JAM_VERSION }}/no_forks
+          python jam-conformance/fuzz-proto/minifuzz/minifuzz.py -d jam-conformance/fuzz-proto/examples/${{ env.JAM_VERSION }}/no_forks -s ${{ github.workspace }}/jam_target.sock
 
       - name: Run fuzzer on minifuzz examples - forks
         run: |
-          python jam-conformance/fuzz-proto/minifuzz/minifuzz.py -d jam-conformance/fuzz-proto/examples/${{ env.JAM_VERSION }}/forks
+          python jam-conformance/fuzz-proto/minifuzz/minifuzz.py -d jam-conformance/fuzz-proto/examples/${{ env.JAM_VERSION }}/forks -s ${{ github.workspace }}/jam_target.sock
 
       - name: Stop jampy-target
         if: always()
-        run: kill $(cat target.pid)
+        run: |
+          kill $(cat target.pid) 2>/dev/null || true
+          rm -f ${{ github.workspace }}/jam_target.sock

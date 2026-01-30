@@ -1,0 +1,61 @@
+name: 'Setup Jampy'
+description: 'Extract and start jampy-target and jampy-fuzzer'
+
+inputs:
+  jam_version:
+    description: 'JAM version'
+    required: true
+  bin_arch:
+    description: 'Binary architecture'
+    required: false
+    default: 'x86-64'
+
+outputs:
+  socket_file:
+    description: 'Path to the socket file'
+    value: ${{ github.workspace }}/jam_target.sock
+  target_pid_file:
+    description: 'Path to the target PID file'
+    value: ${{ github.workspace }}/target.pid
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Install unzip
+      shell: bash
+      run: sudo apt-get update && sudo apt-get install -y unzip
+
+    - name: Extract jampy-target
+      shell: bash
+      run: unzip -q dist/jampy-target-${{ inputs.jam_version }}_${{ inputs.bin_arch }}.zip -d jampy-target
+
+    - name: Extract jampy-fuzzer
+      shell: bash
+      run: unzip -q dist/jampy-fuzzer-${{ inputs.jam_version }}_${{ inputs.bin_arch }}.zip -d jampy-fuzzer
+
+    - name: Make binaries executable
+      shell: bash
+      run: |
+        chmod +x jampy-target/jampy-target-${{ inputs.jam_version }}_${{ inputs.bin_arch }}/jampy-target-${{ inputs.jam_version }}_${{ inputs.bin_arch }}
+        chmod +x jampy-fuzzer/jampy-fuzzer-${{ inputs.jam_version }}_${{ inputs.bin_arch }}/jampy-fuzzer-${{ inputs.jam_version }}_${{ inputs.bin_arch }}
+
+    - name: Run jampy-target in background
+      shell: bash
+      run: |
+        cd ./jampy-target/jampy-target-${{ inputs.jam_version }}_${{ inputs.bin_arch }}/
+        setsid ./jampy-target-${{ inputs.jam_version }}_${{ inputs.bin_arch }} --socket-file ${{ github.workspace }}/jam_target.sock &
+        echo $! > ${{ github.workspace }}/target.pid
+        sleep 3
+
+    - name: Wait for socket
+      shell: bash
+      run: |
+        for i in 1 2 3 4 5; do
+          if [ -S ${{ github.workspace }}/jam_target.sock ]; then
+            echo "Socket ready"
+            exit 0
+          fi
+          sleep 1
+        done
+        echo "Socket not found"
+        exit 1
