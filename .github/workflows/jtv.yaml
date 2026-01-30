@@ -33,6 +33,18 @@ jobs:
       - name: Clone jam-test-vectors
         run: git clone https://github.com/davxy/jam-test-vectors
 
+      - name: Start jampy-target
+        run: |
+          cd ./jampy-target/jampy-target-${{ env.JAM_VERSION }}_${{ env.BIN_ARCH }}/
+          setsid ./jampy-target-${{ env.JAM_VERSION }}_${{ env.BIN_ARCH }} --socket-file ${{ github.workspace }}/jam_target.sock &
+          echo $! > ${{ github.workspace }}/target.pid
+          sleep 3
+          for i in 1 2 3 4 5; do
+            [ -S ${{ github.workspace }}/jam_target.sock ] && echo "Socket ready" && exit 0
+            sleep 1
+          done
+          echo "Socket not found" && exit 1
+
       - name: Run fuzzer on traces - fallback
         run: |
           cd ./jampy-fuzzer/jampy-fuzzer-${{ env.JAM_VERSION }}_${{ env.BIN_ARCH }}/
