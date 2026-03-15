@@ -48,6 +48,22 @@ options:
 ```
 
 
+## Docker
+
+```bash
+docker pull ghcr.io/dakk/jampy-target:0.7.2
+docker run ghcr.io/dakk/jampy-target:0.7.2
+```
+
+### Publishing a new Docker image
+
+```bash
+docker build -f Dockerfile.jampy-target-VERSION -t ghcr.io/dakk/jampy-target:VERSION .
+gh auth token | docker login ghcr.io -u dakk --password-stdin
+docker push ghcr.io/dakk/jampy-target:VERSION
+```
+
+
 ## About the author
 
 Davide Gessa (dakk(k)*)

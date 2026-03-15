@@ -1,0 +1,15 @@
+FROM debian:bookworm-slim
+
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends unzip ca-certificates && \
+    rm -rf /var/lib/apt/lists/*
+
+COPY dist/jampy-target-0.7.2_x86-64.zip /tmp/jampy-target.zip
+
+RUN unzip /tmp/jampy-target.zip -d /opt && \
+    rm /tmp/jampy-target.zip && \
+    chmod +x /opt/jampy-target-0.7.2_x86-64/jampy-target-0.7.2_x86-64
+
+WORKDIR /opt/jampy-target-0.7.2_x86-64
+
+ENTRYPOINT ["./jampy-target-0.7.2_x86-64"]
