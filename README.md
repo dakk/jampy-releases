@@ -13,14 +13,14 @@ This repository will be integrated in jampy source repository once the project w
 ## Target
 
 ```
-usage: jampy-target-0.7.2_x86-64 [-h] [--env {tiny,full}] [--socket-file SOCKET_FILE] [--version]
+usage: jampy-target-0.7.2_x86-64 [-h] [--spec {tiny,full}] [--sock SOCKET_FILE] [--version]
 
 Jampy target
 
 options:
   -h, --help            show this help message and exit
-  --env {tiny,full}     Specify environment mode: 'tiny' or 'full' (default: 'tiny')
-  --socket-file SOCKET_FILE
+  --spec {tiny,full}    Specify environment mode: 'tiny' or 'full' (default: 'tiny')
+  --sock SOCKET_FILE
                         Specify the socket file (default: '/tmp/jam_target.sock')
   --version             Print the jampy and jam version and exit
 ```
@@ -28,15 +28,15 @@ options:
 ## Fuzzer
 
 ```
-usage: jampy-fuzzer-0.7.2_x86-64 [-h] [--env {tiny,full}] [--socket-file SOCKET_FILE] [--version] [--seed SEED] [--blocks BLOCKS] [--mod {fallback,safrole}]
+usage: jampy-fuzzer-0.7.2_x86-64 [-h] [--spec {tiny,full}] [--sock SOCKET_FILE] [--version] [--seed SEED] [--blocks BLOCKS] [--mod {fallback,safrole}]
                                  [--single-trace SINGLE_TRACE]
 
 Jampy fuzzer
 
 options:
   -h, --help            show this help message and exit
-  --env {tiny,full}     Specify environment mode: 'tiny' or 'full' (default: 'tiny')
-  --socket-file SOCKET_FILE
+  --spec {tiny,full}    Specify environment mode: 'tiny' or 'full' (default: 'tiny')
+  --sock SOCKET_FILE
                         Specify the socket file (default: '/tmp/jam_target.sock')
   --version             Print the jampy and jam version and exit
   --seed SEED           Random seed (default: current timestamp)
