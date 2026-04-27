@@ -40,7 +40,7 @@ jobs:
       - name: Start jampy-target
         run: |
           cd ./jampy-target/jampy-target-${{ env.JAM_VERSION }}_${{ env.BIN_ARCH }}/
-          nohup ./jampy-target-${{ env.JAM_VERSION }}_${{ env.BIN_ARCH }} ${{ matrix.flags }} --socket-file ${{ github.workspace }}/jam_target.sock > ${{ github.workspace }}/target.log 2>&1 &
+          nohup ./jampy-target-${{ env.JAM_VERSION }}_${{ env.BIN_ARCH }} ${{ matrix.flags }} --sock ${{ github.workspace }}/jam_target.sock > ${{ github.workspace }}/target.log 2>&1 &
           echo $! > ${{ github.workspace }}/target.pid
           sleep 3
           for i in 1 2 3 4 5; do
@@ -57,7 +57,7 @@ jobs:
           for f in ${{ github.workspace }}/jam-test-vectors/traces/fallback/*.bin; do
             if [[ "$f" != *genesis* ]]; then
               echo "Running fuzzer on $f"
-              ./jampy-fuzzer-${{ env.JAM_VERSION }}_${{ env.BIN_ARCH }} --socket-file ${{ github.workspace }}/jam_target.sock --single-trace "$f"
+              ./jampy-fuzzer-${{ env.JAM_VERSION }}_${{ env.BIN_ARCH }} --sock ${{ github.workspace }}/jam_target.sock --single-trace "$f"
             fi
           done
 
@@ -67,7 +67,7 @@ jobs:
           for f in ${{ github.workspace }}/jam-test-vectors/traces/safrole/*.bin; do
             if [[ "$f" != *genesis* ]]; then
               echo "Running fuzzer on $f"
-              ./jampy-fuzzer-${{ env.JAM_VERSION }}_${{ env.BIN_ARCH }} --socket-file ${{ github.workspace }}/jam_target.sock --single-trace "$f"
+              ./jampy-fuzzer-${{ env.JAM_VERSION }}_${{ env.BIN_ARCH }} --sock ${{ github.workspace }}/jam_target.sock --single-trace "$f"
             fi
           done
 
@@ -77,7 +77,7 @@ jobs:
           for f in ${{ github.workspace }}/jam-test-vectors/traces/preimages_light/*.bin; do
             if [[ "$f" != *genesis* ]]; then
               echo "Running fuzzer on $f"
-              ./jampy-fuzzer-${{ env.JAM_VERSION }}_${{ env.BIN_ARCH }} --socket-file ${{ github.workspace }}/jam_target.sock --single-trace "$f"
+              ./jampy-fuzzer-${{ env.JAM_VERSION }}_${{ env.BIN_ARCH }} --sock ${{ github.workspace }}/jam_target.sock --single-trace "$f"
             fi
           done
 
@@ -87,7 +87,7 @@ jobs:
           for f in ${{ github.workspace }}/jam-test-vectors/traces/storage_light/*.bin; do
             if [[ "$f" != *genesis* ]]; then
               echo "Running fuzzer on $f"
-              ./jampy-fuzzer-${{ env.JAM_VERSION }}_${{ env.BIN_ARCH }} --socket-file ${{ github.workspace }}/jam_target.sock --single-trace "$f"
+              ./jampy-fuzzer-${{ env.JAM_VERSION }}_${{ env.BIN_ARCH }} --sock ${{ github.workspace }}/jam_target.sock --single-trace "$f"
             fi
           done
 
@@ -97,7 +97,7 @@ jobs:
           for f in ${{ github.workspace }}/jam-test-vectors/traces/fuzzy_light/*.bin; do
             if [[ "$f" != *genesis* ]]; then
               echo "Running fuzzer on $f"
-              ./jampy-fuzzer-${{ env.JAM_VERSION }}_${{ env.BIN_ARCH }} --socket-file ${{ github.workspace }}/jam_target.sock --single-trace "$f"
+              ./jampy-fuzzer-${{ env.JAM_VERSION }}_${{ env.BIN_ARCH }} --sock ${{ github.workspace }}/jam_target.sock --single-trace "$f"
             fi
           done
 
@@ -107,7 +107,7 @@ jobs:
           for f in ${{ github.workspace }}/jam-test-vectors/traces/preimages/*.bin; do
             if [[ "$f" != *genesis* ]]; then
               echo "Running fuzzer on $f"
-              ./jampy-fuzzer-${{ env.JAM_VERSION }}_${{ env.BIN_ARCH }} --socket-file ${{ github.workspace }}/jam_target.sock --single-trace "$f"
+              ./jampy-fuzzer-${{ env.JAM_VERSION }}_${{ env.BIN_ARCH }} --sock ${{ github.workspace }}/jam_target.sock --single-trace "$f"
             fi
           done
 
@@ -117,7 +117,7 @@ jobs:
           for f in ${{ github.workspace }}/jam-test-vectors/traces/storage/*.bin; do
             if [[ "$f" != *genesis* ]]; then
               echo "Running fuzzer on $f"
-              ./jampy-fuzzer-${{ env.JAM_VERSION }}_${{ env.BIN_ARCH }} --socket-file ${{ github.workspace }}/jam_target.sock --single-trace "$f"
+              ./jampy-fuzzer-${{ env.JAM_VERSION }}_${{ env.BIN_ARCH }} --sock ${{ github.workspace }}/jam_target.sock --single-trace "$f"
             fi
           done
 
@@ -127,7 +127,7 @@ jobs:
           for f in ${{ github.workspace }}/jam-test-vectors/traces/fuzzy/*.bin; do
             if [[ "$f" != *genesis* ]]; then
               echo "Running fuzzer on $f"
-              ./jampy-fuzzer-${{ env.JAM_VERSION }}_${{ env.BIN_ARCH }} --socket-file ${{ github.workspace }}/jam_target.sock --single-trace "$f"
+              ./jampy-fuzzer-${{ env.JAM_VERSION }}_${{ env.BIN_ARCH }} --sock ${{ github.workspace }}/jam_target.sock --single-trace "$f"
             fi
           done
 

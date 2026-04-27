@@ -45,7 +45,7 @@ jobs:
       - name: Start jampy-target
         run: |
           cd ./jampy-target/jampy-target-${{ env.JAM_VERSION }}_${{ env.BIN_ARCH }}/
-          nohup ./jampy-target-${{ env.JAM_VERSION }}_${{ env.BIN_ARCH }} ${{ matrix.flags }} --socket-file ${{ github.workspace }}/jam_target.sock > ${{ github.workspace }}/target.log 2>&1 &
+          nohup ./jampy-target-${{ env.JAM_VERSION }}_${{ env.BIN_ARCH }} ${{ matrix.flags }} --sock ${{ github.workspace }}/jam_target.sock > ${{ github.workspace }}/target.log 2>&1 &
           echo $! > ${{ github.workspace }}/target.pid
           sleep 3
           for i in 1 2 3 4 5; do
