@@ -13,10 +13,10 @@ jobs:
     strategy:
       matrix:
         include:
-          - jam_version: '0.7.0'
-            flags: ''
-          - jam_version: '0.7.1'
-            flags: ''
+          # - jam_version: '0.7.0'
+          #   flags: ''
+          # - jam_version: '0.7.1'
+          #   flags: ''
           - jam_version: '0.7.2'
             flags: ''
           - jam_version: '0.7.2'
