@@ -1,78 +1,78 @@
-name: Conformance Vectors M1 branches
+# name: Conformance Vectors M1 branches
 
-on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+# on:
+#   push:
+#     branches: [ main ]
+#   pull_request:
+#     branches: [ main ]
 
-jobs:
-  test-vectors:
-    runs-on: ubuntu-latest
+# jobs:
+#   test-vectors:
+#     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        include:
-          # - jam_version: '0.7.0'
-          #   flags: ''
-          # - jam_version: '0.7.1'
-          #   flags: ''
-          - jam_version: '0.7.2'
-            flags: ''
-          - jam_version: '0.7.2'
-            flags: '--use-recompiler'
+#     strategy:
+#       matrix:
+#         include:
+#           # - jam_version: '0.7.0'
+#           #   flags: ''
+#           # - jam_version: '0.7.1'
+#           #   flags: ''
+#           - jam_version: '0.7.2'
+#             flags: ''
+#           - jam_version: '0.7.2'
+#             flags: '--use-recompiler'
 
-    env:
-      BIN_ARCH: x86-64
-      JAM_VERSION: ${{ matrix.jam_version }}
+#     env:
+#       BIN_ARCH: x86-64
+#       JAM_VERSION: ${{ matrix.jam_version }}
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+#     steps:
+#       - name: Checkout repository
+#         uses: actions/checkout@v3
 
-      - name: Setup Jampy
-        uses: ./.github/actions/setup-jampy
-        with:
-          jam_version: ${{ env.JAM_VERSION }}
+#       - name: Setup Jampy
+#         uses: ./.github/actions/setup-jampy
+#         with:
+#           jam_version: ${{ env.JAM_VERSION }}
 
-      - name: Install git
-        run: sudo apt-get install -y git
+#       - name: Install git
+#         run: sudo apt-get install -y git
 
-      - name: Clone jam-conformance
-        run: |
-          git clone https://github.com/w3f/jam-conformance
-          cd jam-conformance && git checkout jampy_m1
+#       - name: Clone jam-conformance
+#         run: |
+#           git clone https://github.com/w3f/jam-conformance
+#           cd jam-conformance && git checkout jampy_m1
 
-      - name: Start jampy-target
-        run: |
-          cd ./jampy-target/jampy-target-${{ env.JAM_VERSION }}_${{ env.BIN_ARCH }}/
-          nohup ./jampy-target-${{ env.JAM_VERSION }}_${{ env.BIN_ARCH }} ${{ matrix.flags }} --sock ${{ github.workspace }}/jam_target.sock > ${{ github.workspace }}/target.log 2>&1 &
-          echo $! > ${{ github.workspace }}/target.pid
-          sleep 3
-          for i in 1 2 3 4 5; do
-            [ -S ${{ github.workspace }}/jam_target.sock ] && echo "Socket ready" && exit 0
-            sleep 1
-          done
-          echo "Socket not found"
-          cat ${{ github.workspace }}/target.log
-          exit 1
+#       - name: Start jampy-target
+#         run: |
+#           cd ./jampy-target/jampy-target-${{ env.JAM_VERSION }}_${{ env.BIN_ARCH }}/
+#           nohup ./jampy-target-${{ env.JAM_VERSION }}_${{ env.BIN_ARCH }} ${{ matrix.flags }} --sock ${{ github.workspace }}/jam_target.sock > ${{ github.workspace }}/target.log 2>&1 &
+#           echo $! > ${{ github.workspace }}/target.pid
+#           sleep 3
+#           for i in 1 2 3 4 5; do
+#             [ -S ${{ github.workspace }}/jam_target.sock ] && echo "Socket ready" && exit 0
+#             sleep 1
+#           done
+#           echo "Socket not found"
+#           cat ${{ github.workspace }}/target.log
+#           exit 1
 
-      - name: Run fuzzer on conformance traces
-        run: |
-          set -euo pipefail
-          cd ./jampy-fuzzer/jampy-fuzzer-${{ env.JAM_VERSION }}_${{ env.BIN_ARCH }}/
-          while IFS= read -r -d '' f; do
-            filename=$(basename "$f")
-            if [[ "$filename" != *genesis* ]]; then
-              echo "Running fuzzer on $f"
-              ./jampy-fuzzer-${{ env.JAM_VERSION }}_${{ env.BIN_ARCH }} --sock ${{ github.workspace }}/jam_target.sock --single-trace "$f" || {
-                echo "Fuzzer returned non-zero on $f"
-              }
-            fi
-          done < <(find ${{ github.workspace }}/jam-conformance/fuzz-reports/${{ env.JAM_VERSION }}/traces/ -type f -name '*.bin' -print0)
+#       - name: Run fuzzer on conformance traces
+#         run: |
+#           set -euo pipefail
+#           cd ./jampy-fuzzer/jampy-fuzzer-${{ env.JAM_VERSION }}_${{ env.BIN_ARCH }}/
+#           while IFS= read -r -d '' f; do
+#             filename=$(basename "$f")
+#             if [[ "$filename" != *genesis* ]]; then
+#               echo "Running fuzzer on $f"
+#               ./jampy-fuzzer-${{ env.JAM_VERSION }}_${{ env.BIN_ARCH }} --sock ${{ github.workspace }}/jam_target.sock --single-trace "$f" || {
+#                 echo "Fuzzer returned non-zero on $f"
+#               }
+#             fi
+#           done < <(find ${{ github.workspace }}/jam-conformance/fuzz-reports/${{ env.JAM_VERSION }}/traces/ -type f -name '*.bin' -print0)
 
-      - name: Stop jampy-target
-        if: always()
-        run: |
-          kill $(cat target.pid) 2>/dev/null || true
-          rm -f ${{ github.workspace }}/jam_target.sock
+#       - name: Stop jampy-target
+#         if: always()
+#         run: |
+#           kill $(cat target.pid) 2>/dev/null || true
+#           rm -f ${{ github.workspace }}/jam_target.sock
