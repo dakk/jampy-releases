@@ -39,6 +39,7 @@ jobs:
       - name: Start jampy-target
         run: |
           docker run -d --name jampy-target \
+            --user $(id -u):$(id -g) \
             -v ${{ github.workspace }}:/workspace \
             ghcr.io/dakk/jampy-target:${{ env.JAM_VERSION }} \
             ${{ matrix.flags }} --sock /workspace/jam_target.sock
