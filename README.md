@@ -12,6 +12,11 @@ This repository will be integrated in jampy source repository once the project w
 
 ## Target
 
+```bash
+docker pull ghcr.io/dakk/jampy-target:0.7.2
+docker run ghcr.io/dakk/jampy-target:0.7.2
+```
+
 ```
 usage: jampy-target-0.7.2_x86-64 [-h] [--spec {tiny,full}] [--sock SOCKET_FILE] [--version]
 
@@ -26,6 +31,11 @@ options:
 ```
 
 ## Fuzzer
+
+```bash
+docker pull ghcr.io/dakk/jampy-fuzzer:0.7.2
+docker run ghcr.io/dakk/jampy-fuzzer:0.7.2
+```
 
 ```
 usage: jampy-fuzzer-0.7.2_x86-64 [-h] [--spec {tiny,full}] [--sock SOCKET_FILE] [--version] [--seed SEED] [--blocks BLOCKS] [--mod {fallback,safrole}]
@@ -47,21 +57,6 @@ options:
                         Send a single trace file to the target in json or binary format (default: none)
 ```
 
-
-## Docker
-
-```bash
-docker pull ghcr.io/dakk/jampy-target:0.7.2
-docker run ghcr.io/dakk/jampy-target:0.7.2
-```
-
-### Publishing a new Docker image
-
-```bash
-docker build -f Dockerfile.jampy-target-0.7.2 -t ghcr.io/dakk/jampy-target:0.7.2 .
-# gh auth token | docker login ghcr.io -u dakk --password-stdin
-docker push ghcr.io/dakk/jampy-target:0.7.2
-```
 
 
 ## About the author
