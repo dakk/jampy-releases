@@ -1,0 +1,171 @@
+name: Jam Test Vectors (Docker)
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test-vectors:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        include:
+          - jam_version: '0.7.2'
+            flags: ''
+          - jam_version: '0.7.2'
+            flags: '--use-recompiler'
+
+    env:
+      JAM_VERSION: ${{ matrix.jam_version }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install git
+        run: sudo apt-get install -y git
+
+      - name: Clone jam-test-vectors
+        run: git clone https://github.com/davxy/jam-test-vectors
+
+      - name: Pull Docker images
+        run: |
+          docker pull ghcr.io/dakk/jampy-target:${{ env.JAM_VERSION }}
+          docker pull ghcr.io/dakk/jampy-fuzzer:${{ env.JAM_VERSION }}
+
+      - name: Start jampy-target
+        run: |
+          docker run -d --name jampy-target \
+            -v ${{ github.workspace }}:/workspace \
+            ghcr.io/dakk/jampy-target:${{ env.JAM_VERSION }} \
+            ${{ matrix.flags }} --sock /workspace/jam_target.sock
+          sleep 3
+          for i in 1 2 3 4 5; do
+            [ -S ${{ github.workspace }}/jam_target.sock ] && echo "Socket ready" && exit 0
+            sleep 1
+          done
+          echo "Socket not found"
+          docker logs jampy-target
+          exit 1
+
+      - name: Run fuzzer on traces - fallback
+        run: |
+          for f in ${{ github.workspace }}/jam-test-vectors/traces/fallback/*.bin; do
+            if [[ "$f" != *genesis* ]]; then
+              echo "Running fuzzer on $f"
+              relpath="${f#${{ github.workspace }}/}"
+              docker run --rm \
+                -v ${{ github.workspace }}:/workspace \
+                ghcr.io/dakk/jampy-fuzzer:${{ env.JAM_VERSION }} \
+                --sock /workspace/jam_target.sock \
+                --single-trace /workspace/"$relpath"
+            fi
+          done
+
+      - name: Run fuzzer on traces - safrole
+        run: |
+          for f in ${{ github.workspace }}/jam-test-vectors/traces/safrole/*.bin; do
+            if [[ "$f" != *genesis* ]]; then
+              echo "Running fuzzer on $f"
+              relpath="${f#${{ github.workspace }}/}"
+              docker run --rm \
+                -v ${{ github.workspace }}:/workspace \
+                ghcr.io/dakk/jampy-fuzzer:${{ env.JAM_VERSION }} \
+                --sock /workspace/jam_target.sock \
+                --single-trace /workspace/"$relpath"
+            fi
+          done
+
+      - name: Run fuzzer on traces - preimages_light
+        run: |
+          for f in ${{ github.workspace }}/jam-test-vectors/traces/preimages_light/*.bin; do
+            if [[ "$f" != *genesis* ]]; then
+              echo "Running fuzzer on $f"
+              relpath="${f#${{ github.workspace }}/}"
+              docker run --rm \
+                -v ${{ github.workspace }}:/workspace \
+                ghcr.io/dakk/jampy-fuzzer:${{ env.JAM_VERSION }} \
+                --sock /workspace/jam_target.sock \
+                --single-trace /workspace/"$relpath"
+            fi
+          done
+
+      - name: Run fuzzer on traces - storage_light
+        run: |
+          for f in ${{ github.workspace }}/jam-test-vectors/traces/storage_light/*.bin; do
+            if [[ "$f" != *genesis* ]]; then
+              echo "Running fuzzer on $f"
+              relpath="${f#${{ github.workspace }}/}"
+              docker run --rm \
+                -v ${{ github.workspace }}:/workspace \
+                ghcr.io/dakk/jampy-fuzzer:${{ env.JAM_VERSION }} \
+                --sock /workspace/jam_target.sock \
+                --single-trace /workspace/"$relpath"
+            fi
+          done
+
+      - name: Run fuzzer on traces - fuzzy_light
+        run: |
+          for f in ${{ github.workspace }}/jam-test-vectors/traces/fuzzy_light/*.bin; do
+            if [[ "$f" != *genesis* ]]; then
+              echo "Running fuzzer on $f"
+              relpath="${f#${{ github.workspace }}/}"
+              docker run --rm \
+                -v ${{ github.workspace }}:/workspace \
+                ghcr.io/dakk/jampy-fuzzer:${{ env.JAM_VERSION }} \
+                --sock /workspace/jam_target.sock \
+                --single-trace /workspace/"$relpath"
+            fi
+          done
+
+      - name: Run fuzzer on traces - preimages
+        run: |
+          for f in ${{ github.workspace }}/jam-test-vectors/traces/preimages/*.bin; do
+            if [[ "$f" != *genesis* ]]; then
+              echo "Running fuzzer on $f"
+              relpath="${f#${{ github.workspace }}/}"
+              docker run --rm \
+                -v ${{ github.workspace }}:/workspace \
+                ghcr.io/dakk/jampy-fuzzer:${{ env.JAM_VERSION }} \
+                --sock /workspace/jam_target.sock \
+                --single-trace /workspace/"$relpath"
+            fi
+          done
+
+      - name: Run fuzzer on traces - storage
+        run: |
+          for f in ${{ github.workspace }}/jam-test-vectors/traces/storage/*.bin; do
+            if [[ "$f" != *genesis* ]]; then
+              echo "Running fuzzer on $f"
+              relpath="${f#${{ github.workspace }}/}"
+              docker run --rm \
+                -v ${{ github.workspace }}:/workspace \
+                ghcr.io/dakk/jampy-fuzzer:${{ env.JAM_VERSION }} \
+                --sock /workspace/jam_target.sock \
+                --single-trace /workspace/"$relpath"
+            fi
+          done
+
+      - name: Run fuzzer on traces - fuzzy
+        run: |
+          for f in ${{ github.workspace }}/jam-test-vectors/traces/fuzzy/*.bin; do
+            if [[ "$f" != *genesis* ]]; then
+              echo "Running fuzzer on $f"
+              relpath="${f#${{ github.workspace }}/}"
+              docker run --rm \
+                -v ${{ github.workspace }}:/workspace \
+                ghcr.io/dakk/jampy-fuzzer:${{ env.JAM_VERSION }} \
+                --sock /workspace/jam_target.sock \
+                --single-trace /workspace/"$relpath"
+            fi
+          done
+
+      - name: Stop jampy-target
+        if: always()
+        run: |
+          docker stop jampy-target 2>/dev/null || true
+          docker rm jampy-target 2>/dev/null || true
+          rm -f ${{ github.workspace }}/jam_target.sock

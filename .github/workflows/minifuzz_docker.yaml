@@ -1,0 +1,73 @@
+name: MiniFuzz (Docker)
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test-vectors:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        include:
+          - jam_version: '0.7.2'
+            flags: ''
+          - jam_version: '0.7.2'
+            flags: '--use-recompiler'
+
+    env:
+      JAM_VERSION: ${{ matrix.jam_version }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install git
+        run: sudo apt-get install -y git
+
+      - name: Install jam-types-py
+        run: |
+          pip install https://github.com/davxy/jam-types-py/archive/refs/tags/v${{ env.JAM_VERSION }}.tar.gz --break-system-packages
+
+      - name: Clone jam-conformance
+        run: git clone https://github.com/davxy/jam-conformance
+
+      - name: Pull Docker image
+        run: docker pull ghcr.io/dakk/jampy-target:${{ env.JAM_VERSION }}
+
+      - name: Start jampy-target
+        run: |
+          docker run -d --name jampy-target \
+            -v ${{ github.workspace }}:/workspace \
+            ghcr.io/dakk/jampy-target:${{ env.JAM_VERSION }} \
+            ${{ matrix.flags }} --sock /workspace/jam_target.sock
+          sleep 3
+          for i in 1 2 3 4 5; do
+            [ -S ${{ github.workspace }}/jam_target.sock ] && echo "Socket ready" && exit 0
+            sleep 1
+          done
+          echo "Socket not found"
+          docker logs jampy-target
+          exit 1
+
+      - name: Run fuzzer on minifuzz examples - no_forks
+        run: |
+          python jam-conformance/fuzz-proto/minifuzz/minifuzz.py \
+            -d jam-conformance/fuzz-proto/examples/${{ env.JAM_VERSION }}/no_forks \
+            --target-sock ${{ github.workspace }}/jam_target.sock
+
+      - name: Run fuzzer on minifuzz examples - forks
+        run: |
+          python jam-conformance/fuzz-proto/minifuzz/minifuzz.py \
+            -d jam-conformance/fuzz-proto/examples/${{ env.JAM_VERSION }}/forks \
+            --target-sock ${{ github.workspace }}/jam_target.sock
+
+      - name: Stop jampy-target
+        if: always()
+        run: |
+          docker stop jampy-target 2>/dev/null || true
+          docker rm jampy-target 2>/dev/null || true
+          rm -f ${{ github.workspace }}/jam_target.sock
