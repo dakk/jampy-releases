@@ -3,7 +3,7 @@
 ![CI Status](https://github.com/dakk/jampy-releases/actions/workflows/ci.yaml/badge.svg)
 ![Conformance Status](https://github.com/dakk/jampy-releases/actions/workflows/conformance.yaml/badge.svg)
 ![Conformance Status (Docker)](https://github.com/dakk/jampy-releases/actions/workflows/conformance_docker.yaml/badge.svg)
-![Conformance Status M1](https://github.com/dakk/jampy-releases/actions/workflows/conformance_m1.yaml/badge.svg)
+<!-- ![Conformance Status M1](https://github.com/dakk/jampy-releases/actions/workflows/conformance_m1.yaml/badge.svg) -->
 ![JTV Status](https://github.com/dakk/jampy-releases/actions/workflows/jtv.yaml/badge.svg)
 ![JTV Status (Docker)](https://github.com/dakk/jampy-releases/actions/workflows/jtv_docker.yaml/badge.svg)
 ![MiniFuzz Status](https://github.com/dakk/jampy-releases/actions/workflows/minifuzz.yaml/badge.svg)
