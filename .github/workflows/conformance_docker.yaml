@@ -24,6 +24,11 @@ jobs:
 
     env:
       JAM_VERSION: ${{ matrix.jam_version }}
+      JAM_FUZZ: 1
+      JAM_FUZZ_SPEC: tiny
+      JAM_FUZZ_SOCK_PATH: /workspace/jam_target.sock
+      JAM_FUZZ_DATA_PATH: ''
+      JAM_FUZZ_LOG_LEVEL: info
 
     steps:
       - name: Checkout repository
@@ -45,8 +50,13 @@ jobs:
           docker run -d --name jampy-target \
             --user $(id -u):$(id -g) \
             -v ${{ github.workspace }}:/workspace \
+            -e JAM_FUZZ=${{ env.JAM_FUZZ }} \
+            -e JAM_FUZZ_SPEC=${{ env.JAM_FUZZ_SPEC }} \
+            -e JAM_FUZZ_SOCK_PATH=${{ env.JAM_FUZZ_SOCK_PATH }} \
+            -e JAM_FUZZ_DATA_PATH=${{ env.JAM_FUZZ_DATA_PATH }} \
+            -e JAM_FUZZ_LOG_LEVEL=${{ env.JAM_FUZZ_LOG_LEVEL }} \
             ghcr.io/dakk/jampy-target:${{ env.JAM_VERSION }} \
-            ${{ matrix.flags }} --sock /workspace/jam_target.sock
+            ${{ matrix.flags }}
           sleep 3
           for i in 1 2 3 4 5; do
             [ -S ${{ github.workspace }}/jam_target.sock ] && echo "Socket ready" && exit 0
@@ -67,7 +77,7 @@ jobs:
               docker run --rm \
                 -v ${{ github.workspace }}:/workspace \
                 ghcr.io/dakk/jampy-fuzzer:${{ env.JAM_VERSION }} \
-                --sock /workspace/jam_target.sock \
+                --sock ${{ env.JAM_FUZZ_SOCK_PATH }} \
                 --single-trace /workspace/"$relpath" || {
                   echo "Fuzzer returned non-zero on $f"
                 }
