@@ -1,0 +1,74 @@
+name: GrayMatter Fuzzer (Docker)
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  graymatter-fuzz:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        include:
+          - jam_version: '0.7.2'
+            flags: ''
+          - jam_version: '0.7.2'
+            flags: '--use-recompiler'
+
+    env:
+      JAM_VERSION: ${{ matrix.jam_version }}
+      JAM_FUZZ: 1
+      JAM_FUZZ_SPEC: full
+      JAM_FUZZ_SOCK_PATH: /workspace/jam_target.sock
+      JAM_FUZZ_DATA_PATH: ''
+      JAM_FUZZ_LOG_LEVEL: trace
+      NUM_BLOCKS: 500
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Pull Docker images
+        run: |
+          docker pull ghcr.io/dakk/jampy-target:${{ env.JAM_VERSION }}
+          docker pull ghcr.io/jambrains/graymatter/gm:conformance-fuzzer-latest
+
+      - name: Start jampy-target
+        run: |
+          docker run -d --name jampy-target \
+            --user $(id -u):$(id -g) \
+            -v ${{ github.workspace }}:/workspace \
+            -e JAM_FUZZ=${{ env.JAM_FUZZ }} \
+            -e JAM_FUZZ_SPEC=${{ env.JAM_FUZZ_SPEC }} \
+            -e JAM_FUZZ_SOCK_PATH=${{ env.JAM_FUZZ_SOCK_PATH }} \
+            -e JAM_FUZZ_DATA_PATH=${{ env.JAM_FUZZ_DATA_PATH }} \
+            -e JAM_FUZZ_LOG_LEVEL=${{ env.JAM_FUZZ_LOG_LEVEL }} \
+            ghcr.io/dakk/jampy-target:${{ env.JAM_VERSION }} \
+            ${{ matrix.flags }}
+          for i in $(seq 1 15); do
+            [ -S ${{ github.workspace }}/jam_target.sock ] && echo "Socket ready" && exit 0
+            sleep 1
+          done
+          echo "Socket not found after 15s"
+          docker logs jampy-target
+          exit 1
+
+      - name: Run GrayMatter fuzzer (full spec, ${{ env.NUM_BLOCKS }} blocks)
+        run: |
+          docker run --rm \
+            -v ${{ github.workspace }}:/workspace \
+            ghcr.io/jambrains/graymatter/gm:conformance-fuzzer-latest \
+            fuzz-m1-source \
+              --spec ${{ env.JAM_FUZZ_SPEC }} \
+              --num-blocks ${{ env.NUM_BLOCKS }} \
+              --target ${{ env.JAM_FUZZ_SOCK_PATH }}
+
+      - name: Stop jampy-target
+        if: always()
+        run: |
+          docker stop jampy-target 2>/dev/null || true
+          docker rm jampy-target 2>/dev/null || true
+          rm -f ${{ github.workspace }}/jam_target.sock
