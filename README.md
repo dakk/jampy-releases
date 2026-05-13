@@ -8,7 +8,7 @@
 ![JTV Status (Docker)](https://github.com/dakk/jampy-releases/actions/workflows/jtv_docker.yaml/badge.svg)
 ![MiniFuzz Status](https://github.com/dakk/jampy-releases/actions/workflows/minifuzz.yaml/badge.svg)
 ![MiniFuzz Status (Docker)](https://github.com/dakk/jampy-releases/actions/workflows/minifuzz_docker.yaml/badge.svg)
-![GrayMatter Fuzzer Status (Docker)](https://github.com/dakk/jampy-releases/actions/workflows/graymatter_docker.yaml/badge.svg)
+![GrayMatter Fuzzer Status (Docker)](https://github.com/dakk/jampy-releases/actions/workflows/graymatter_fuzzer.yaml/badge.svg)
 
 This repository contains the fuzzer-target for jampy, for different version of the gray paper.
 This repository will be integrated in jampy source repository once the project will be public.

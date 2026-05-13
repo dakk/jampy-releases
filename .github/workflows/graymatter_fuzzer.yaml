@@ -59,6 +59,7 @@ jobs:
       - name: Run GrayMatter fuzzer (full spec, ${{ env.NUM_BLOCKS }} blocks)
         run: |
           docker run --rm \
+            --user $(id -u):$(id -g) \
             -v ${{ github.workspace }}:/workspace \
             ghcr.io/jambrains/graymatter/gm:conformance-fuzzer-latest \
             fuzz-m1-source \
