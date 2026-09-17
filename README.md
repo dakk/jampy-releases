@@ -17,12 +17,12 @@ This repository will be integrated in jampy source repository once the project w
 ## Target
 
 ```bash
-docker pull ghcr.io/dakk/jampy-target:0.7.2
-docker run ghcr.io/dakk/jampy-target:0.7.2
+docker pull ghcr.io/dakk/jampy-target:0.8.0
+docker run ghcr.io/dakk/jampy-target:0.8.0
 ```
 
 ```
-usage: jampy-target-0.7.2_x86-64 [-h] [--spec {tiny,full}] [--sock SOCK]
+usage: jampy-target-0.8.0_x86-64 [-h] [--spec {tiny,full}] [--sock SOCK]
                                  [--data-dir DATA_DIR]
                                  [--log-level {error,warn,info,debug,trace}]
                                  [--version] [--trace] [--trace-pvm]
@@ -50,12 +50,12 @@ options:
 ## Fuzzer
 
 ```bash
-docker pull ghcr.io/dakk/jampy-fuzzer:0.7.2
-docker run ghcr.io/dakk/jampy-fuzzer:0.7.2
+docker pull ghcr.io/dakk/jampy-fuzzer:0.8.0
+docker run ghcr.io/dakk/jampy-fuzzer:0.8.0
 ```
 
 ```
-usage: jampy-fuzzer-0.7.2_x86-64 [-h] [--spec {tiny,full}] [--sock SOCK]
+usage: jampy-fuzzer-0.8.0_x86-64 [-h] [--spec {tiny,full}] [--sock SOCK]
                                  [--version] [--seed SEED] [--blocks BLOCKS]
                                  [--mod {fallback,safrole}]
                                  [--single-trace SINGLE_TRACE]
