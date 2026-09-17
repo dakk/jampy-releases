@@ -13,8 +13,8 @@ jobs:
     strategy:
       matrix:
         include:
-          - jam_version: '0.7.2'
-            flags: ''
+          # - jam_version: '0.7.2'
+          #   flags: ''
           # - jam_version: '0.7.2'
           #   flags: '--use-recompiler'
 

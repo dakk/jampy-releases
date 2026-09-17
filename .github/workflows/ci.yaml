@@ -17,9 +17,13 @@ jobs:
           #   flags: ''
           # - jam_version: '0.7.1'
           #   flags: ''
-          - jam_version: '0.7.2'
+          # - jam_version: '0.7.2'
+          #   flags: ''
+          # - jam_version: '0.7.2'
+          #   flags: '--use-recompiler'
+          - jam_version: '0.8.0'
             flags: ''
-          - jam_version: '0.7.2'
+          - jam_version: '0.8.0'
             flags: '--use-recompiler'
 
     env:
