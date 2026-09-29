@@ -10,8 +10,43 @@
 ![MiniFuzz Status (Docker)](https://github.com/dakk/jampy-releases/actions/workflows/minifuzz_docker.yaml/badge.svg)
 ![GrayMatter Fuzzer Status (Docker)](https://github.com/dakk/jampy-releases/actions/workflows/graymatter_fuzzer.yaml/badge.svg)
 
-This repository contains the fuzzer-target for jampy, for different version of the gray paper.
+This repository contains the jampy node and fuzzer-target for jampy, for different version of the gray paper.
 This repository will be integrated in jampy source repository once the project will be public.
+
+## Node
+
+```bash
+docker pull ghcr.io/dakk/jampy-node:0.8.0
+docker run ghcr.io/dakk/jampy-node:0.8.0
+```
+
+```
+usage: jampy-node [-h] [--genesis GENESIS] [--validator] [--dev-validator DEV_VALIDATOR] [--host HOST] [--port PORT]
+                  [--bootstrap-nodes BOOTSTRAP_NODES] [--rpc-port RPC_PORT] [--rpc-host RPC_HOST] [--rpc-enable] [-v]
+
+JamPy node
+
+options:
+  -h, --help            show this help message and exit
+  -v, --verbose         increase logging verbosity
+
+chain:
+  --genesis GENESIS     genesis chainstate
+  --validator           create new blocks
+  --dev-validator DEV_VALIDATOR
+                        use a dev validator key (0-5)
+
+p2p:
+  --host HOST           listen on the specified address (defaults to ::)
+  --port PORT           listen on the specified port (defaults to 7070)
+  --bootstrap-nodes BOOTSTRAP_NODES
+                        comma separated list of bootstrap nodes
+
+rpc:
+  --rpc-port RPC_PORT   listen on the specified json rpc port (defaults to 8765)
+  --rpc-host RPC_HOST   listen on the specified json rpc host (defaults to localhost)
+  --rpc-enable          enable json-rpc api
+```
 
 
 ## Target
