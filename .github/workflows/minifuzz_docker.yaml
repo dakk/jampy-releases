@@ -45,7 +45,7 @@ jobs:
           # pip install https://github.com/davxy/jam-types-py/archive/refs/tags/v${{ env.JAM_VERSION }}.tar.gz --break-system-packages
 
       - name: Clone jam-conformance
-        run: git clone https://github.com/davxy/jam-conformance
+        run: git clone https://github.com/davxy/jam-conformance -b minifuzz-v0.8.0
 
       - name: Pull Docker image
         run: docker pull ghcr.io/dakk/jampy-target:${{ env.JAM_VERSION }}
