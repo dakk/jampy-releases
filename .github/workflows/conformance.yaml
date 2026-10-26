@@ -1,10 +1,10 @@
 name: Conformance Vectors
 
 on:
-  # push:
-  #   branches: [ main ]
-  # pull_request:
-  #   branches: [ main ]
+  push:
+    branches: [ ]
+  pull_request:
+    branches: [ ]
 
 jobs:
   test-vectors:
